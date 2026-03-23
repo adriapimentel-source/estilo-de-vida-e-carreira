@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O 'Eu' de 2045 — Projeto de Vida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #1d4e5f;
+      --primary-lite:  #2d7a9a;
+      --accent:        #e8a030;
+      --accent-lite:   #ffc85c;
+      --bg:            #f5f3ee;
+      --card:          #ffffff;
+      --text:          #1a1a2e;
+      --muted:         #6b7280;
+      --border:        #e0ddd8;
+      --danger:        #c0392b;
+      --success-bg:    #d4edda;
+      --success-fg:    #155724;
+      --error-bg:      #f8d7da;
+      --error-fg:      #721c24;
+      --radius:        12px;
+      --radius-sm:     8px;
+      --shadow:        0 2px 16px rgba(0,0,0,.08);
+      --font-h:        'Fraunces', Georgia, serif;
+      --font-b:        'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    /* ===== LAYOUT ===== */
+    .app { max-width: 700px; margin: 0 auto; padding: 20px 16px 80px; }
+
+    /* ===== PAGES ===== */
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn .3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1 {
+      font-family: var(--font-h);
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.12;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    h2 {
+      font-family: var(--font-h);
+      font-size: clamp(1.35rem, 3.5vw, 1.9rem);
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    h3 { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+    p  { color: var(--muted); margin-bottom: 6px; }
+
+    /* ===== BADGE ===== */
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    /* ===== PROGRESS ===== */
+    .progress-wrap {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .progress-bg { flex: 1; height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-lite));
+      border-radius: 100px;
+      transition: width .4s ease;
+    }
+    .progress-txt { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header { text-align: center; padding: 28px 0 20px; }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .card-icon { font-size: 1.75rem; margin-bottom: 10px; display: block; }
+
+    /* ===== FORM ===== */
+    .form-group { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+    label .req { color: var(--danger); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-b);
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color .18s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    textarea { min-height: 96px; resize: vertical; }
+
+    .err-msg { color: var(--danger); font-size: 12.5px; margin-top: 5px; display: none; }
+    .field-err input, .field-err select, .field-err textarea { border-color: var(--danger) !important; }
+
+    /* ===== CHIPS ===== */
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+    .chip input { display: none; }
+    .chip label {
+      display: inline-block;
+      padding: 5px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #fff;
+      color: var(--muted);
+      transition: all .14s;
+      margin: 0;
+    }
+    .chip input:checked + label {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .chip label:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== SLIDERS ===== */
+    .slider-wrap { margin-bottom: 20px; }
+    .slider-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 5px;
+    }
+    .slider-lbl { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .slider-val {
+      font-family: var(--font-h);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 28px;
+      text-align: right;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(
+        90deg,
+        var(--primary) calc(var(--pct, 70) * 1%),
+        var(--border)  calc(var(--pct, 70) * 1%)
+      );
+      border-radius: 100px;
+      cursor: pointer;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,.22);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,.22);
+      cursor: pointer;
+    }
+    .slider-hints {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted); margin-top: 2px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px;
+      border-radius: 100px;
+      font-family: var(--font-b);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-lite); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(29,78,95,.3); }
+    .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--muted); }
+
+    .nav-btns {
+      display: flex; justify-content: space-between; gap: 10px;
+      margin-top: 28px;
+    }
+    .nav-btns .btn { flex: 1; justify-content: center; }
+
+    /* ===== INFO / WARN BOXES ===== */
+    .info-box {
+      background: #e3f2f8;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 13px 15px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+    }
+    .warn-box {
+      background: #fff8e8;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 13px 15px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+    }
+
+    /* ===== COVER ===== */
+    .cover-hero { text-align: center; padding: 36px 0 24px; }
+    .stats-row { display: flex; gap: 28px; justify-content: center; margin: 20px 0 28px; }
+    .stat-n { font-family: var(--font-h); font-size: 2.2rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .stat-l { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+    .cover-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin: 0 0 20px; }
+    .cover-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; font-weight: 500;
+    }
+    .cover-num {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-weight: 700; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== WHEEL CONTAINER — KEY FIX ===== */
+    .wheel-wrap {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      /* Square aspect ratio, never larger than 480px */
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      /* Fixed aspect ratio so canvas always fits */
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #roda-canvas {
+      /* Fill the container exactly */
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* ===== RESULT ===== */
+    .res-section { margin-bottom: 0; }
+    .answer { margin-bottom: 13px; }
+    .answer-lbl { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
+    .answer-val { font-size: 14.5px; color: var(--text); line-height: 1.55; }
+
+    .scores-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .score-cell { background: var(--bg); border-radius: var(--radius-sm); padding: 11px; text-align: center; }
+    .score-n { font-family: var(--font-h); font-size: 1.75rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .score-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    /* ===== STATUS ===== */
+    .status {
+      padding: 14px 16px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; margin-top: 16px;
+      display: none;
+    }
+    .status.ok  { background: var(--success-bg); color: var(--success-fg); display: block; }
+    .status.err { background: var(--error-bg);   color: var(--error-fg);   display: block; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; }
+      .app { max-width: 100%; padding: 0; }
+      .page { display: block !important; page-break-after: avoid; }
+      .card { box-shadow: none; border: 1px solid #ddd; }
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 480px) {
+      .cover-grid { grid-template-columns: 1fr; }
+      .scores-grid { grid-template-columns: repeat(2,1fr); }
+      .stats-row { gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+<!-- ================================================================
+     PAGE 0 — CAPA + DADOS
+================================================================ -->
+<div class="page active" id="page-0">
+  <div class="cover-hero">
+    <div class="badge">Aula 4 · 2º Anos · Projeto de Vida</div>
+    <h1>O <em>'Eu'</em><br>de 2045</h1>
+    <p style="font-size:15.5px;margin-top:12px;color:var(--muted)">Projete a vida que você quer construir — onde morar, como trabalhar, que relações cultivar.</p>
+
+    <div class="stats-row">
+      <div><div class="stat-n">6</div><div class="stat-l">Etapas</div></div>
+      <div><div class="stat-n">~20'</div><div class="stat-l">Duração</div></div>
+      <div><div class="stat-n">12</div><div class="stat-l">Áreas da Vida</div></div>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    ⚠️ <strong>Atenção — Leia antes de começar!</strong><br>
+    <strong>Quanto mais detalhes você incluir, mais proveitosa será esta atividade.</strong>
+    Respostas curtas como "quero ser feliz" não ajudam tanto quanto descrições ricas e aprofundadas.
+    A <strong>próxima atividade terá como base exatamente o que você escrever aqui</strong>. Capriche!
+  </div>
+
+  <div class="cover-grid">
+    <div class="cover-item"><div class="cover-num">1</div>📍 Onde viver</div>
+    <div class="cover-item"><div class="cover-num">2</div>💼 Carreira</div>
+    <div class="cover-item"><div class="cover-num">3</div>💰 Finanças</div>
+    <div class="cover-item"><div class="cover-num">4</div>❤️ Relações</div>
+    <div class="cover-item"><div class="cover-num">5</div>🌱 Práticas</div>
+    <div class="cover-item"><div class="cover-num">6</div>🎯 Roda da Vida</div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Seus dados</h3>
+
+    <div class="form-group">
+      <label for="nome">Nome completo <span class="req">*</span></label>
+      <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name" />
+      <div class="err-msg" id="err-nome">Por favor, informe seu nome completo.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="ra">RA (Registro do Aluno) <span class="req">*</span></label>
+      <input type="text" id="ra" placeholder="Seu RA" />
+      <div class="err-msg" id="err-ra">Por favor, informe seu RA.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="turma">Turma <span class="req">*</span></label>
+      <select id="turma">
+        <option value="">Selecionar turma...</option>
+        <optgroup label="2A"><option>2AA</option><option>2AB</option><option>2AC</option><option>2AD</option></optgroup>
+        <optgroup label="2B"><option>2BA</option><option>2BB</option><option>2BC</option><option>2BD</option></optgroup>
+        <optgroup label="2C"><option>2CA</option><option>2CB</option><option>2CC</option><option>2CD</option></optgroup>
+      </select>
+      <div class="err-msg" id="err-turma">Por favor, selecione sua turma.</div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="iniciar()">Vamos lá →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 1 — ONDE VIVER
+================================================================ -->
+<div class="page" id="page-1">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:16.6%"></div></div>
+    <div class="progress-txt">1 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 1 de 6</div>
+    <h2>📍 Onde você quer viver?</h2>
+    <p>Em 2045 você terá entre 35 e 40 anos. Imagine o espaço físico onde quer estar — seja específico.</p>
+  </div>
+
+  <div class="info-box">
+    💡 <strong>Dica:</strong> Pense em clima, cultura, custo de vida, proximidade da família e oportunidades na sua área.
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🌍</span>
+    <h3>Localização desejada</h3>
+
+    <div class="form-group">
+      <label for="pais">País</label>
+      <select id="pais" onchange="togglePaisOutro(this)">
+        <option value="">Selecione ou informe abaixo...</option>
+        <option>🇧🇷 Brasil</option>
+        <option>🇵🇹 Portugal</option>
+        <option>🇺🇸 EUA</option>
+        <option>🇨🇦 Canadá</option>
+        <option>🇩🇪 Alemanha</option>
+        <option>🇬🇧 Reino Unido</option>
+        <option>🌎 América Latina</option>
+        <option>🌏 Ásia</option>
+        <option>🌍 África</option>
+        <option value="outro">Outro país...</option>
+      </select>
+    </div>
+    <div class="form-group" id="pais-outro-wrap" style="display:none">
+      <label for="pais-outro">Qual país?</label>
+      <input type="text" id="pais-outro" placeholder="Digite o país..." />
+    </div>
+    <div class="form-group">
+      <label for="cidade-lugar">Cidade ou tipo de lugar <span class="req">*</span></label>
+      <input type="text" id="cidade-lugar" placeholder="Ex: São Paulo, Lisboa, cidade pequena no litoral..." />
+      <div class="err-msg" id="err-cidade">Por favor, descreva onde quer viver.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🏠</span>
+    <h3>Tipo de moradia</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="m1" name="moradia" value="Apartamento próprio"><label for="m1">Apartamento próprio</label></div>
+      <div class="chip"><input type="checkbox" id="m2" name="moradia" value="Casa própria"><label for="m2">Casa própria</label></div>
+      <div class="chip"><input type="checkbox" id="m3" name="moradia" value="Aluguel"><label for="m3">Aluguel</label></div>
+      <div class="chip"><input type="checkbox" id="m4" name="moradia" value="Com família"><label for="m4">Com família</label></div>
+      <div class="chip"><input type="checkbox" id="m5" name="moradia" value="Compartilhado"><label for="m5">Compartilhado</label></div>
+      <div class="chip"><input type="checkbox" id="m6" name="moradia" value="Nômade digital"><label for="m6">Nômade digital</label></div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label for="desc-moradia">Como você imagina esse espaço? Descreva com detalhes. <span class="req">*</span></label>
+      <textarea id="desc-moradia" placeholder="Ex: uma casa com jardim nos arredores de uma cidade grande, com espaço para trabalhar em casa e receber amigos..."></textarea>
+      <div class="err-msg" id="err-moradia">Por favor, descreva como imagina seu espaço.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Avalie na Roda da Vida</h3>
+    <p style="font-size:13px;margin-bottom:14px">Com base no que respondeu nesta etapa, avalie de 0 a 10:</p>
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-lbl">Plenitude (satisfação geral com a vida)</span>
+        <span class="slider-val" id="v-plenitude">7</span>
+      </div>
+      <input type="range" min="0" max="10" value="7" id="s-plenitude"
+        oninput="updateSlider(this,'v-plenitude','plenitude')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(0)">← Voltar</button>
+    <button class="btn btn-primary" onclick="avancar(1)">Próxima etapa →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 2 — CARREIRA
+================================================================ -->
+<div class="page" id="page-2">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:33.3%"></div></div>
+    <div class="progress-txt">2 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 2 de 6</div>
+    <h2>💼 Como você quer trabalhar?</h2>
+    <p>Carreira não é só profissão — é um estilo de vida. Onde, como e para quê você quer trabalhar diz muito sobre quem vai se tornar.</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🎯</span>
+    <h3>Profissão ou área de atuação</h3>
+    <div class="form-group">
+      <label for="area">Em que área ou profissão você se imagina em 2045?</label>
+      <input type="text" id="area" placeholder="Ex: medicina, engenharia de software, educação, arquitetura..." />
+    </div>
+    <div class="form-group">
+      <label for="porque-area">Por que essa área atrai você? <span class="req">*</span></label>
+      <textarea id="porque-area" placeholder="Descreva o que te atrai, que impacto você quer ter, que problemas quer resolver..."></textarea>
+      <div class="err-msg" id="err-area">Por favor, explique por que essa área te atrai.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🏗️</span>
+    <h3>Modelo de trabalho</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="mt1" name="modelo-trab" value="CLT / Emprego formal"><label for="mt1">CLT / Emprego formal</label></div>
+      <div class="chip"><input type="checkbox" id="mt2" name="modelo-trab" value="Freelancer / Autônomo"><label for="mt2">Freelancer / Autônomo</label></div>
+      <div class="chip"><input type="checkbox" id="mt3" name="modelo-trab" value="Empreendimento próprio"><label for="mt3">Empreendimento próprio</label></div>
+      <div class="chip"><input type="checkbox" id="mt4" name="modelo-trab" value="Serviço público"><label for="mt4">Serviço público</label></div>
+      <div class="chip"><input type="checkbox" id="mt5" name="modelo-trab" value="Pesquisa acadêmica"><label for="mt5">Pesquisa acadêmica</label></div>
+      <div class="chip"><input type="checkbox" id="mt6" name="modelo-trab" value="Múltiplas fontes"><label for="mt6">Múltiplas fontes</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">📍</span>
+    <h3>Ambiente de trabalho</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="at1" name="amb-trab" value="Presencial"><label for="at1">Presencial</label></div>
+      <div class="chip"><input type="checkbox" id="at2" name="amb-trab" value="Home office"><label for="at2">Home office</label></div>
+      <div class="chip"><input type="checkbox" id="at3" name="amb-trab" value="Híbrido"><label for="at3">Híbrido</label></div>
+      <div class="chip"><input type="checkbox" id="at4" name="amb-trab" value="Nômade"><label for="at4">Nômade</label></div>
+      <div class="chip"><input type="checkbox" id="at5" name="amb-trab" value="Hospital / Clínica"><label for="at5">Hospital / Clínica</label></div>
+      <div class="chip"><input type="checkbox" id="at6" name="amb-trab" value="Escola / Universidade"><label for="at6">Escola / Universidade</label></div>
+      <div class="chip"><input type="checkbox" id="at7" name="amb-trab" value="Campo / Natureza"><label for="at7">Campo / Natureza</label></div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label for="valores-trab">Que valores são inegociáveis no seu trabalho? <span class="req">*</span></label>
+      <textarea id="valores-trab" placeholder="Ex: autonomia, propósito, flexibilidade, remuneração justa, impacto social..."></textarea>
+      <div class="err-msg" id="err-valores">Por favor, descreva seus valores inegociáveis no trabalho.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Avalie na Roda da Vida</h3>
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-lbl">Propósito (sentido no que faz)</span>
+        <span class="slider-val" id="v-proposito">7</span>
+      </div>
+      <input type="range" min="0" max="10" value="7" id="s-proposito"
+        oninput="updateSlider(this,'v-proposito','proposito')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-lbl">Desenvolvimento Intelectual</span>
+        <span class="slider-val" id="v-intelectual">7</span>
+      </div>
+      <input type="range" min="0" max="10" value="7" id="s-intelectual"
+        oninput="updateSlider(this,'v-intelectual','intelectual')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(1)">← Voltar</button>
+    <button class="btn btn-primary" onclick="avancar(2)">Próxima etapa →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 3 — FINANÇAS
+================================================================ -->
+<div class="page" id="page-3">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:50%"></div></div>
+    <div class="progress-txt">3 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 3 de 6</div>
+    <h2>💰 Sua vida financeira</h2>
+    <p>Saber quanto você precisa e o que quer fazer com dinheiro é parte essencial de qualquer projeto de vida real.</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">💵</span>
+    <h3>Renda mensal desejada</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span style="font-size:13.5px;color:var(--muted)">Valor mensal:</span>
+      <span class="slider-val" id="v-renda" style="font-size:1.6rem">R$ 8.000</span>
+    </div>
+    <input type="range" min="1000" max="80000" step="500" value="8000" id="s-renda"
+      oninput="updateRenda(this)" style="--pct:8.87">
+    <div class="slider-hints"><span>R$ 1.000</span><span>R$ 20.000</span><span>R$ 40.000</span><span>R$ 80.000</span></div>
+
+    <div class="form-group" style="margin-top:18px">
+      <label for="porque-renda">Por que essa faixa? O que ela permite fazer? <span class="req">*</span></label>
+      <textarea id="porque-renda" placeholder="Ex: permite pagar minha moradia, viajar 2x ao ano, pagar escola dos filhos e ainda investir..."></textarea>
+      <div class="err-msg" id="err-renda">Por favor, explique por que essa faixa de renda.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🏦</span>
+    <h3>Estilo e prioridades financeiras</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="ef1" name="estilo-fin" value="Poupador / investidor"><label for="ef1">Poupador / investidor</label></div>
+      <div class="chip"><input type="checkbox" id="ef2" name="estilo-fin" value="Experiências e viagens"><label for="ef2">Experiências e viagens</label></div>
+      <div class="chip"><input type="checkbox" id="ef3" name="estilo-fin" value="Segurança e reserva"><label for="ef3">Segurança e reserva</label></div>
+      <div class="chip"><input type="checkbox" id="ef4" name="estilo-fin" value="Ajudar família"><label for="ef4">Ajudar família</label></div>
+      <div class="chip"><input type="checkbox" id="ef5" name="estilo-fin" value="Consumo consciente"><label for="ef5">Consumo consciente</label></div>
+      <div class="chip"><input type="checkbox" id="ef6" name="estilo-fin" value="Liberdade financeira"><label for="ef6">Liberdade financeira</label></div>
+      <div class="chip"><input type="checkbox" id="ef7" name="estilo-fin" value="Doação e impacto social"><label for="ef7">Doação e impacto</label></div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label for="o-que-permite">O que a estabilidade financeira vai possibilitar além do básico?</label>
+      <textarea id="o-que-permite" placeholder="Ex: financiar estudos, criar um negócio, ajudar meus pais, viajar pelo mundo..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Avalie na Roda da Vida</h3>
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-lbl">Finanças</span>
+        <span class="slider-val" id="v-financas">7</span>
+      </div>
+      <input type="range" min="0" max="10" value="7" id="s-financas"
+        oninput="updateSlider(this,'v-financas','financas')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(2)">← Voltar</button>
+    <button class="btn btn-primary" onclick="avancar(3)">Próxima etapa →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 4 — RELAÇÕES
+================================================================ -->
+<div class="page" id="page-4">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:66.6%"></div></div>
+    <div class="progress-txt">4 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 4 de 6</div>
+    <h2>❤️ Suas relações</h2>
+    <p>As pessoas que nos cercam moldam quem nos tornamos. Como você quer construir e cuidar das suas relações em 2045?</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">👨‍👩‍👧</span>
+    <h3>Família e vida afetiva</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="va1" name="vida-afetiva" value="Em um relacionamento"><label for="va1">Em um relacionamento</label></div>
+      <div class="chip"><input type="checkbox" id="va2" name="vida-afetiva" value="Com filhos"><label for="va2">Com filhos</label></div>
+      <div class="chip"><input type="checkbox" id="va3" name="vida-afetiva" value="Sem relacionamento, por escolha"><label for="va3">Sem relacionamento, por escolha</label></div>
+      <div class="chip"><input type="checkbox" id="va4" name="vida-afetiva" value="Perto da família de origem"><label for="va4">Perto da família de origem</label></div>
+      <div class="chip"><input type="checkbox" id="va5" name="vida-afetiva" value="Família ampliada"><label for="va5">Família ampliada</label></div>
+      <div class="chip"><input type="checkbox" id="va6" name="vida-afetiva" value="Com pets"><label for="va6">Com pets 🐾</label></div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label for="desc-familiar">Descreva como você imagina essa dinâmica. <span class="req">*</span></label>
+      <textarea id="desc-familiar" placeholder="Ex: casado(a), dois filhos, morando perto dos meus pais, fins de semana em família..."></textarea>
+      <div class="err-msg" id="err-familiar">Por favor, descreva sua vida familiar desejada.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">👥</span>
+    <h3>Amizades e comunidade</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="rs1" name="rede-social" value="Poucos amigos próximos"><label for="rs1">Poucos amigos próximos</label></div>
+      <div class="chip"><input type="checkbox" id="rs2" name="rede-social" value="Rede ampla de contatos"><label for="rs2">Rede ampla de contatos</label></div>
+      <div class="chip"><input type="checkbox" id="rs3" name="rede-social" value="Comunidade de causa"><label for="rs3">Comunidade de causa</label></div>
+      <div class="chip"><input type="checkbox" id="rs4" name="rede-social" value="Grupos culturais"><label for="rs4">Grupos culturais</label></div>
+      <div class="chip"><input type="checkbox" id="rs5" name="rede-social" value="Comunidade profissional"><label for="rs5">Comunidade profissional</label></div>
+      <div class="chip"><input type="checkbox" id="rs6" name="rede-social" value="Conexões internacionais"><label for="rs6">Conexões internacionais</label></div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label for="qual-relacoes">Que qualidades você quer cultivar nas suas relações? <span class="req">*</span></label>
+      <textarea id="qual-relacoes" placeholder="Ex: honestidade, lealdade, reciprocidade, diversidade de perspectivas..."></textarea>
+      <div class="err-msg" id="err-relacoes">Por favor, descreva as qualidades que quer nas relações.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Avalie na Roda da Vida</h3>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Família</span><span class="slider-val" id="v-familia">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-familia" oninput="updateSlider(this,'v-familia','familia')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Amor / Relacionamento</span><span class="slider-val" id="v-amor">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-amor" oninput="updateSlider(this,'v-amor','amor')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Social (amizades e comunidade)</span><span class="slider-val" id="v-social">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-social" oninput="updateSlider(this,'v-social','social')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(3)">← Voltar</button>
+    <button class="btn btn-primary" onclick="avancar(4)">Próxima etapa →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 5 — PRÁTICAS
+================================================================ -->
+<div class="page" id="page-5">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:83.3%"></div></div>
+    <div class="progress-txt">5 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 5 de 6</div>
+    <h2>🌱 Suas práticas de vida</h2>
+    <p>O que você faz no dia a dia define quem você se torna. Que hábitos e atividades quer na sua rotina em 2045?</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🏃</span>
+    <h3>Saúde e cuidado com o corpo</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="sc1" name="saude-corpo" value="Atividade física regular"><label for="sc1">Atividade física regular</label></div>
+      <div class="chip"><input type="checkbox" id="sc2" name="saude-corpo" value="Alimentação saudável"><label for="sc2">Alimentação saudável</label></div>
+      <div class="chip"><input type="checkbox" id="sc3" name="saude-corpo" value="Acompanhamento preventivo"><label for="sc3">Acompanhamento preventivo</label></div>
+      <div class="chip"><input type="checkbox" id="sc4" name="saude-corpo" value="Terapia / saúde mental"><label for="sc4">Terapia / saúde mental</label></div>
+      <div class="chip"><input type="checkbox" id="sc5" name="saude-corpo" value="Sono de qualidade"><label for="sc5">Sono de qualidade</label></div>
+      <div class="chip"><input type="checkbox" id="sc6" name="saude-corpo" value="Esporte coletivo"><label for="sc6">Esporte coletivo</label></div>
+      <div class="chip"><input type="checkbox" id="sc7" name="saude-corpo" value="Dança / movimento"><label for="sc7">Dança / movimento</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">✨</span>
+    <h3>Espiritualidade e propósito</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="ep1" name="espiritualidade" value="Meditação / mindfulness"><label for="ep1">Meditação / mindfulness</label></div>
+      <div class="chip"><input type="checkbox" id="ep2" name="espiritualidade" value="Religião / fé"><label for="ep2">Religião / fé</label></div>
+      <div class="chip"><input type="checkbox" id="ep3" name="espiritualidade" value="Contato com a natureza"><label for="ep3">Contato com a natureza</label></div>
+      <div class="chip"><input type="checkbox" id="ep4" name="espiritualidade" value="Voluntariado / serviço"><label for="ep4">Voluntariado / serviço</label></div>
+      <div class="chip"><input type="checkbox" id="ep5" name="espiritualidade" value="Arte e expressão criativa"><label for="ep5">Arte e expressão criativa</label></div>
+      <div class="chip"><input type="checkbox" id="ep6" name="espiritualidade" value="Filosofia / autoconhecimento"><label for="ep6">Filosofia / autoconhecimento</label></div>
+      <div class="chip"><input type="checkbox" id="ep7" name="espiritualidade" value="Não vejo como prioridade"><label for="ep7">Não vejo como prioridade</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🎨</span>
+    <h3>Lazer e criatividade</h3>
+    <div class="chips">
+      <div class="chip"><input type="checkbox" id="lz1" name="lazer" value="Viagens"><label for="lz1">Viagens</label></div>
+      <div class="chip"><input type="checkbox" id="lz2" name="lazer" value="Leitura"><label for="lz2">Leitura</label></div>
+      <div class="chip"><input type="checkbox" id="lz3" name="lazer" value="Artes visuais"><label for="lz3">Artes visuais</label></div>
+      <div class="chip"><input type="checkbox" id="lz4" name="lazer" value="Música"><label for="lz4">Música</label></div>
+      <div class="chip"><input type="checkbox" id="lz5" name="lazer" value="Culinária / confeitaria"><label for="lz5">Culinária / confeitaria</label></div>
+      <div class="chip"><input type="checkbox" id="lz6" name="lazer" value="Cinema / séries / doramas"><label for="lz6">Cinema / séries / doramas</label></div>
+      <div class="chip"><input type="checkbox" id="lz7" name="lazer" value="Jogos"><label for="lz7">Jogos</label></div>
+      <div class="chip"><input type="checkbox" id="lz8" name="lazer" value="Escrita criativa"><label for="lz8">Escrita criativa</label></div>
+      <div class="chip"><input type="checkbox" id="lz9" name="lazer" value="Artesanato / crochê"><label for="lz9">Artesanato / crochê</label></div>
+      <div class="chip"><input type="checkbox" id="lz10" name="lazer" value="Jardinagem / plantas"><label for="lz10">Jardinagem / plantas</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🌍</span>
+    <h3>Contribuição com o mundo</h3>
+    <div class="form-group">
+      <label for="contribuicao">De que forma você quer deixar uma marca positiva ao redor?</label>
+      <textarea id="contribuicao" placeholder="Ex: ser referência na minha área, criar empregos, educar pessoas, preservar o meio ambiente..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Avalie na Roda da Vida</h3>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Saúde</span><span class="slider-val" id="v-saude">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-saude" oninput="updateSlider(this,'v-saude','saude')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Equilíbrio Emocional</span><span class="slider-val" id="v-emocional">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-emocional" oninput="updateSlider(this,'v-emocional','emocional')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Espiritualidade</span><span class="slider-val" id="v-espiritualidade">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-espiritualidade" oninput="updateSlider(this,'v-espiritualidade','espiritualidade')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Lazer</span><span class="slider-val" id="v-lazer">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-lazer" oninput="updateSlider(this,'v-lazer','lazer')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-head"><span class="slider-lbl">Contribuição com o Mundo</span><span class="slider-val" id="v-contribuicao">7</span></div>
+      <input type="range" min="0" max="10" value="7" id="s-contribuicao" oninput="updateSlider(this,'v-contribuicao','contribuicao')" style="--pct:70">
+      <div class="slider-hints"><span>0 — Não priorizo</span><span>5 — Moderado</span><span>10 — Essencial</span></div>
+    </div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(4)">← Voltar</button>
+    <button class="btn btn-primary" onclick="avancar(5)">Próxima etapa →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PAGE 6 — REVISÃO RODA DA VIDA
+================================================================ -->
+<div class="page" id="page-6">
+  <div class="progress-wrap no-print">
+    <div class="progress-bg"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="progress-txt">6 / 6</div>
+  </div>
+  <div class="page-header">
+    <div class="badge">Etapa 6 de 6</div>
+    <h2>🎯 Revisão da Roda da Vida</h2>
+    <p>Você avaliou cada área ao longo das etapas. Agora revise o conjunto — ajuste se quiser.</p>
+  </div>
+
+  <div class="info-box">
+    🔍 <strong>Dica:</strong> Observe se há coerência entre o que escreveu e as notas que deu. Se carreira é muito importante mas "Propósito" está baixo, vale rever. Não há certo ou errado — há consciência.
+  </div>
+
+  <div class="card">
+    <h3>Ajuste suas notas finais</h3>
+    <!-- Os sliders de revisão espelham os originais -->
+    <div id="rev-sliders"></div>
+  </div>
+
+  <div class="nav-btns no-print">
+    <button class="btn btn-outline" onclick="goTo(5)">← Voltar</button>
+    <button class="btn btn-primary" onclick="verResultado()">Ver meu resultado →</button>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     RESULTADO
+================================================================ -->
+<div class="page" id="page-result">
+  <div class="page-header">
+    <div class="badge">Projeto de Vida 2045</div>
+    <h1>O seu <em>'Eu'</em><br>de 2045</h1>
+    <p style="font-size:15.5px;margin-top:10px">Aqui está o mapa da vida que você quer construir.</p>
+  </div>
+
+  <div class="warn-box no-print">
+    📥 <strong>Importante: Salve seu resultado!</strong><br>
+    A <strong>próxima atividade será baseada no que você respondeu aqui</strong>. Use "Imprimir / Salvar PDF" para guardar uma cópia.
+  </div>
+
+  <!-- WHEEL -->
+  <div class="card">
+    <h3>🌀 Sua Roda da Vida — 2045</h3>
+    <p style="font-size:13px;margin-bottom:14px">Áreas mais próximas do centro precisam de mais atenção. Áreas na borda refletem alta prioridade.</p>
+    <!-- .wheel-wrap garante o canvas NUNCA ultrapasse o retângulo branco -->
+    <div class="wheel-wrap">
+      <canvas id="roda-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- SCORES -->
+  <div class="card">
+    <h3>📊 Suas notas por área</h3>
+    <div class="scores-grid" id="scores-grid" style="margin-top:12px"></div>
+  </div>
+
+  <!-- SUMMARIES -->
+  <div class="card"><h3>📍 Onde viver</h3><div id="res-moradia"></div></div>
+  <div class="card"><h3>💼 Carreira</h3><div id="res-carreira"></div></div>
+  <div class="card"><h3>💰 Finanças</h3><div id="res-financas"></div></div>
+  <div class="card"><h3>❤️ Relações</h3><div id="res-relacoes"></div></div>
+  <div class="card"><h3>🌱 Práticas</h3><div id="res-praticas"></div></div>
+
+  <!-- SHEETS STATUS -->
+  <div id="status-msg" class="status"></div>
+
+  <!-- ACTIONS -->
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px" class="no-print">
+    <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+    <button class="btn btn-outline" onclick="recomecar()">↺ Recomeçar</button>
+  </div>
+
+  <!-- CONTEXT -->
+  <div class="card" style="margin-top:24px;background:var(--bg)">
+    <p style="font-size:13px;text-align:center">
+      ⚓ Esta atividade integra a jornada de Projeto de Vida. Revise também seus resultados do
+      <a href="https://adriapimentel-source.github.io/ancoras-de-carreira/" target="_blank" style="color:var(--primary);font-weight:600">Teste de Âncoras de Carreira</a>.
+    </p>
+  </div>
+</div>
+
+</div><!-- /.app -->
+
+<script>
+/* ==============================================
+   ⚙️  CONFIGURAÇÃO — COLE A URL DO APPS SCRIPT
+   ============================================== */
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyGAL2u0OQ9GkYqmk2g0CbNb529aI0_WuLwNjQ3EzDMAx3ANGNJbLPeYPrXNDtjC3LPsQ';
+/* ============================================== */
+
+// ──────────────────────────────────────────────
+// ESTADO GLOBAL
+// ──────────────────────────────────────────────
+const scores = {
+  plenitude:7, proposito:7, intelectual:7, financas:7,
+  familia:7, amor:7, social:7, saude:7,
+  emocional:7, espiritualidade:7, lazer:7, contribuicao:7
+};
+
+const CATS = [
+  {key:'plenitude',    label:'Plenitude',            color:'#1d4e5f'},
+  {key:'proposito',    label:'Propósito',             color:'#2d7a4f'},
+  {key:'intelectual',  label:'Intelectual',           color:'#1e6091'},
+  {key:'financas',     label:'Finanças',              color:'#b8860b'},
+  {key:'familia',      label:'Família',               color:'#a93226'},
+  {key:'amor',         label:'Amor',                  color:'#8e44ad'},
+  {key:'social',       label:'Social',                color:'#ca6f1e'},
+  {key:'saude',        label:'Saúde',                 color:'#1e8449'},
+  {key:'emocional',    label:'Emocional',             color:'#2471a3'},
+  {key:'espiritualidade','label':'Espirit.',          color:'#6c3483'},
+  {key:'lazer',        label:'Lazer',                 color:'#b03a2e'},
+  {key:'contribuicao', label:'Contribuição',          color:'#117a65'},
+];
+
+// Fix label key for espiritualidade
+CATS[9].key = 'espiritualidade';
+
+// ──────────────────────────────────────────────
+// NAVEGAÇÃO
+// ──────────────────────────────────────────────
+function goTo(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const id = n === 'result' ? 'page-result' : 'page-' + n;
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo({top:0, behavior:'smooth'}); }
+}
+
+function iniciar() {
+  let ok = true;
+  const nome  = v('nome');
+  const ra    = v('ra');
+  const turma = v('turma');
+  if (!nome)  { markErr('nome','err-nome');  ok=false; } else clearErr('nome','err-nome');
+  if (!ra)    { markErr('ra','err-ra');      ok=false; } else clearErr('ra','err-ra');
+  if (!turma) { markErr('turma','err-turma'); ok=false; } else clearErr('turma','err-turma');
+  if (ok) goTo(1);
+}
+
+function avancar(step) {
+  const checks = {
+    1: () => {
+      let ok = true;
+      if (!v('cidade-lugar'))  { markErr('cidade-lugar','err-cidade');  ok=false; } else clearErr('cidade-lugar','err-cidade');
+      if (!v('desc-moradia'))  { markErr('desc-moradia','err-moradia'); ok=false; } else clearErr('desc-moradia','err-moradia');
+      return ok;
+    },
+    2: () => {
+      let ok = true;
+      if (!v('porque-area'))  { markErr('porque-area','err-area');   ok=false; } else clearErr('porque-area','err-area');
+      if (!v('valores-trab')) { markErr('valores-trab','err-valores'); ok=false; } else clearErr('valores-trab','err-valores');
+      return ok;
+    },
+    3: () => {
+      let ok = true;
+      if (!v('porque-renda')) { markErr('porque-renda','err-renda'); ok=false; } else clearErr('porque-renda','err-renda');
+      return ok;
+    },
+    4: () => {
+      let ok = true;
+      if (!v('desc-familiar'))  { markErr('desc-familiar','err-familiar');   ok=false; } else clearErr('desc-familiar','err-familiar');
+      if (!v('qual-relacoes')) { markErr('qual-relacoes','err-relacoes'); ok=false; } else clearErr('qual-relacoes','err-relacoes');
+      return ok;
+    },
+    5: () => true,
+  };
+  if (checks[step] && !checks[step]()) return;
+  if (step === 5) buildRevSliders();
+  goTo(step + 1);
+}
+
+function markErr(fieldId, errId) {
+  const f = document.getElementById(fieldId);
+  const e = document.getElementById(errId);
+  if (f) f.style.borderColor = 'var(--danger)';
+  if (e) e.style.display = 'block';
+}
+function clearErr(fieldId, errId) {
+  const f = document.getElementById(fieldId);
+  const e = document.getElementById(errId);
+  if (f) f.style.borderColor = '';
+  if (e) e.style.display = 'none';
+}
+
+// ──────────────────────────────────────────────
+// SLIDERS
+// ──────────────────────────────────────────────
+function updateSlider(input, valId, scoreKey) {
+  const n = parseInt(input.value);
+  document.getElementById(valId).textContent = n;
+  input.style.setProperty('--pct', n * 10);
+  if (scoreKey) scores[scoreKey] = n;
+}
+
+function updateRenda(input) {
+  const n = parseInt(input.value);
+  const pct = ((n - 1000) / (80000 - 1000)) * 100;
+  input.style.setProperty('--pct', pct);
+  document.getElementById('v-renda').textContent = 'R$ ' + n.toLocaleString('pt-BR');
+}
+
+function togglePaisOutro(sel) {
+  document.getElementById('pais-outro-wrap').style.display = sel.value === 'outro' ? 'block' : 'none';
+}
+
+// ──────────────────────────────────────────────
+// REVISÃO — gera sliders espelhando os valores atuais
+// ──────────────────────────────────────────────
+const REV_LABELS = {
+  plenitude:'1. Plenitude', proposito:'2. Propósito', intelectual:'3. Desenv. Intelectual',
+  financas:'4. Finanças', familia:'5. Família', amor:'6. Amor / Relacionamento',
+  social:'7. Social', saude:'8. Saúde', emocional:'9. Equilíbrio Emocional',
+  espiritualidade:'10. Espiritualidade', lazer:'11. Lazer', contribuicao:'12. Contribuição com o Mundo'
+};
+
+function buildRevSliders() {
+  const wrap = document.getElementById('rev-sliders');
+  wrap.innerHTML = Object.keys(scores).map(key => `
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-lbl">${REV_LABELS[key]}</span>
+        <span class="slider-val" id="rv-v-${key}">${scores[key]}</span>
+      </div>
+      <input type="range" min="0" max="10" value="${scores[key]}" id="rv-${key}"
+        style="--pct:${scores[key]*10}"
+        oninput="revSync(this,'${key}')">
+    </div>
+  `).join('');
+}
+
+function revSync(input, key) {
+  const n = parseInt(input.value);
+  scores[key] = n;
+  input.style.setProperty('--pct', n * 10);
+  document.getElementById('rv-v-' + key).textContent = n;
+}
+
+// ──────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function checked(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+    .map(e => e.value).join(', ') || '—';
+}
+function getPais() {
+  const sel = document.getElementById('pais').value;
+  if (sel === 'outro') return v('pais-outro') || 'Não informado';
+  return sel || 'Não informado';
+}
+function ans(label, value) {
+  return `<div class="answer"><div class="answer-lbl">${label}</div><div class="answer-val">${value || '—'}</div></div>`;
+}
+
+// ──────────────────────────────────────────────
+// RESULTADO
+// ──────────────────────────────────────────────
+function verResultado() {
+  populateResult();
+  goTo('result');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    desenharRoda();
+    gerarScoresGrid();
+    enviarSheets();
+  }));
+}
+
+function populateResult() {
+  document.getElementById('res-moradia').innerHTML =
+    ans('País', getPais()) +
+    ans('Cidade / Lugar', v('cidade-lugar')) +
+    ans('Tipo de moradia', checked('moradia')) +
+    ans('Descrição do espaço', v('desc-moradia'));
+
+  document.getElementById('res-carreira').innerHTML =
+    ans('Área de atuação', v('area')) +
+    ans('Por que essa área', v('porque-area')) +
+    ans('Modelo de trabalho', checked('modelo-trab')) +
+    ans('Ambiente de trabalho', checked('amb-trab')) +
+    ans('Valores inegociáveis', v('valores-trab'));
+
+  document.getElementById('res-financas').innerHTML =
+    ans('Renda mensal desejada', document.getElementById('v-renda').textContent + '/mês') +
+    ans('Por que essa faixa', v('porque-renda')) +
+    ans('Estilo financeiro', checked('estilo-fin')) +
+    ans('O que a estabilidade possibilita', v('o-que-permite'));
+
+  document.getElementById('res-relacoes').innerHTML =
+    ans('Vida afetiva', checked('vida-afetiva')) +
+    ans('Dinâmica familiar', v('desc-familiar')) +
+    ans('Rede social', checked('rede-social')) +
+    ans('Qualidades nas relações', v('qual-relacoes'));
+
+  document.getElementById('res-praticas').innerHTML =
+    ans('Saúde e corpo', checked('saude-corpo')) +
+    ans('Espiritualidade', checked('espiritualidade')) +
+    ans('Lazer', checked('lazer')) +
+    ans('Contribuição com o mundo', v('contribuicao'));
+}
+
+function gerarScoresGrid() {
+  document.getElementById('scores-grid').innerHTML = CATS.map(c =>
+    `<div class="score-cell">
+      <div class="score-n" style="color:${c.color}">${scores[c.key]}</div>
+      <div class="score-lbl">${c.label}</div>
+    </div>`
+  ).join('');
+}
+
+// ──────────────────────────────────────────────
+// RODA DA VIDA — Canvas responsivo dentro do retângulo
+// ──────────────────────────────────────────────
+function desenharRoda() {
+  const canvas = document.getElementById('roda-canvas');
+  if (!canvas) return;
+
+  // Medir o container real após o layout
+  const wrap = canvas.parentElement;
+  const size  = wrap.clientWidth;   // sempre igual ao container
+
+  // Resolução real do canvas = tamanho CSS (sem DevicePixelRatio para simplificar)
+  canvas.width  = size;
+  canvas.height = size;
+
+  const ctx = canvas.getContext('2d');
+  const cx = size / 2;
+  const cy = size / 2;
+
+  /* Layout fractions:
+     - Wheel radius      : 36% of size  →  labels end at ~46%
+     - Label radius      : 46% of size
+     Together = 92% of half = ≈46% × 2 = 92% of size → fits with 4% margin each side */
+  const maxR   = size * 0.355;
+  const labelR = size * 0.455;
+  const n       = CATS.length;         // 12
+  const step    = (2 * Math.PI) / n;
+  const start   = -Math.PI / 2;        // começa do topo
+
+  ctx.clearRect(0, 0, size, size);
+
+  // ── Anéis de grade ──────────────────────────
+  for (let ring = 1; ring <= 10; ring++) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR * ring / 10, 0, 2 * Math.PI);
+    ctx.strokeStyle = ring === 10 ? '#bbb' : '#ebebeb';
+    ctx.lineWidth   = ring === 10 ? 1.5 : 0.6;
+    ctx.stroke();
+  }
+
+  // ── Spokes ──────────────────────────────────
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + maxR * Math.cos(a), cy + maxR * Math.sin(a));
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth   = 0.6;
+    ctx.stroke();
+  }
+
+  // ── Setores coloridos ────────────────────────
+  for (let i = 0; i < n; i++) {
+    const a1 = start + i * step;
+    const a2 = start + (i + 1) * step;
+    const r  = maxR * scores[CATS[i].key] / 10;
+    if (r < 1) continue;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, a1, a2);
+    ctx.closePath();
+    ctx.fillStyle   = CATS[i].color + '3a';
+    ctx.fill();
+    ctx.strokeStyle = CATS[i].color;
+    ctx.lineWidth   = 1.5;
+    ctx.stroke();
+  }
+
+  // ── Polígono externo ─────────────────────────
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    const r = maxR * scores[CATS[i].key] / 10;
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+  ctx.lineWidth   = 1;
+  ctx.stroke();
+
+  // ── Pontos nas pontas ────────────────────────
+  const dotR = Math.max(3, size * 0.012);
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    const r = maxR * scores[CATS[i].key] / 10;
+    ctx.beginPath();
+    ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), dotR, 0, 2 * Math.PI);
+    ctx.fillStyle = CATS[i].color;
+    ctx.fill();
+  }
+
+  // ── Labels ───────────────────────────────────
+  // FontSize adaptado ao tamanho do canvas
+  const fs = Math.max(8, Math.min(11, Math.floor(size * 0.0215)));
+  ctx.font = `700 ${fs}px 'Plus Jakarta Sans', sans-serif`;
+
+  for (let i = 0; i < n; i++) {
+    const angle = start + i * step;
+    const lx    = cx + labelR * Math.cos(angle);
+    const ly    = cy + labelR * Math.sin(angle);
+
+    // Normalizar ângulo relativo ao topo (0°= cima, horário)
+    const deg = (((angle - start) * 180 / Math.PI) + 360) % 360;
+
+    // Alinhamento baseado em octante (12 itens = 30° cada)
+    if (deg < 15 || deg >= 345) {
+      ctx.textAlign    = 'center'; ctx.textBaseline = 'bottom';
+    } else if (deg < 75) {
+      ctx.textAlign    = 'left';   ctx.textBaseline = 'bottom';
+    } else if (deg < 105) {
+      ctx.textAlign    = 'left';   ctx.textBaseline = 'middle';
+    } else if (deg < 165) {
+      ctx.textAlign    = 'left';   ctx.textBaseline = 'top';
+    } else if (deg < 195) {
+      ctx.textAlign    = 'center'; ctx.textBaseline = 'top';
+    } else if (deg < 255) {
+      ctx.textAlign    = 'right';  ctx.textBaseline = 'top';
+    } else if (deg < 285) {
+      ctx.textAlign    = 'right';  ctx.textBaseline = 'middle';
+    } else {
+      ctx.textAlign    = 'right';  ctx.textBaseline = 'bottom';
+    }
+
+    ctx.fillStyle = CATS[i].color;
+    ctx.fillText(CATS[i].label, lx, ly);
+  }
+
+  // ── Texto central ─────────────────────────────
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font         = `600 ${Math.max(8,Math.floor(fs * 0.9))}px 'Plus Jakarta Sans', sans-serif`;
+  ctx.fillStyle    = '#bbb';
+  ctx.fillText('2045', cx, cy);
+}
+
+// ──────────────────────────────────────────────
+// GOOGLE SHEETS
+// ──────────────────────────────────────────────
+async function enviarSheets() {
+  if (SHEETS_URL.includes('COLE_AQUI')) {
+    console.warn('[Sheets] URL não configurada. Dados não enviados.');
+    return;
+  }
+
+  const statusEl = document.getElementById('status-msg');
+  statusEl.textContent = '⏳ Enviando respostas...';
+  statusEl.className   = 'status ok';
+
+  const payload = {
+    timestamp:       new Date().toLocaleString('pt-BR'),
+    nome:            v('nome'),
+    ra:              v('ra'),
+    turma:           v('turma'),
+    // Etapa 1
+    pais:            getPais(),
+    cidadeLugar:     v('cidade-lugar'),
+    tipoMoradia:     checked('moradia'),
+    descMoradia:     v('desc-moradia'),
+    // Etapa 2
+    area:            v('area'),
+    porqueArea:      v('porque-area'),
+    modeloTrab:      checked('modelo-trab'),
+    ambTrab:         checked('amb-trab'),
+    valoresTrab:     v('valores-trab'),
+    // Etapa 3
+    renda:           document.getElementById('v-renda').textContent,
+    porqueRenda:     v('porque-renda'),
+    estiloFin:       checked('estilo-fin'),
+    oQuePermite:     v('o-que-permite'),
+    // Etapa 4
+    vidaAfetiva:     checked('vida-afetiva'),
+    descFamiliar:    v('desc-familiar'),
+    redeSocial:      checked('rede-social'),
+    qualRelacoes:    v('qual-relacoes'),
+    // Etapa 5
+    saudeCorpo:      checked('saude-corpo'),
+    espiritualidade: checked('espiritualidade'),
+    lazer:           checked('lazer'),
+    contribuicao:    v('contribuicao'),
+    // Notas
+    nota_plenitude:      scores.plenitude,
+    nota_proposito:      scores.proposito,
+    nota_intelectual:    scores.intelectual,
+    nota_financas:       scores.financas,
+    nota_familia:        scores.familia,
+    nota_amor:           scores.amor,
+    nota_social:         scores.social,
+    nota_saude:          scores.saude,
+    nota_emocional:      scores.emocional,
+    nota_espiritualidade:scores.espiritualidade,
+    nota_lazer:          scores.lazer,
+    nota_contribuicao:   scores.contribuicao,
+  };
+
+  try {
+    // Usar text/plain evita preflight CORS com Apps Script
+    const res  = await fetch(SHEETS_URL, {
+      method: 'POST',
+      body:   JSON.stringify(payload),
+      headers:{ 'Content-Type': 'text/plain;charset=utf-8' }
+    });
+    const data = await res.json();
+    if (data.success) {
+      statusEl.textContent = '✅ Respostas salvas com sucesso no Google Sheets!';
+    } else {
+      throw new Error(data.error || 'Erro desconhecido');
+    }
+  } catch(err) {
+    statusEl.textContent = '⚠️ Não foi possível enviar automaticamente. Salve o PDF abaixo como backup.';
+    statusEl.className   = 'status err';
+    console.error('[Sheets]', err);
+  }
+}
+
+// ──────────────────────────────────────────────
+// RECOMEÇAR
+// ──────────────────────────────────────────────
+function recomecar() {
+  if (confirm('Tem certeza? Todas as respostas serão apagadas.')) location.reload();
+}
+
+// ── Inicializar --pct de todos os ranges na carga
+document.querySelectorAll('input[type="range"]').forEach(r => {
+  const min = parseFloat(r.min) || 0;
+  const max = parseFloat(r.max) || 10;
+  r.style.setProperty('--pct', ((r.value - min) / (max - min)) * 100);
+});
+</script>
+</body>
+</html>
